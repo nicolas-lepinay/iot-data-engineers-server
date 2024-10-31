@@ -1,0 +1,9 @@
+# Ignore le dossier node_modules
+node_modules/
+
+# Ignore le fichier .env
+.env
+
+# Autres exclusions possibles (optionnelles)
+.DS_Store  # Fichiers système MacOS
+*.log      # Fichiers de log
