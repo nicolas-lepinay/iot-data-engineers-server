@@ -4,8 +4,8 @@ const https = require('https');
 
 const backendUrl = "https://iot-data-engineers-server.onrender.com/api/equipments";
 
-const cronJob = new cron.CronJob('*/10 * * * *', function () {
-    // Function executed every 10 minutes
+const cronJob = new cron.CronJob('*/13 * * * *', function () {
+    // Function executed every 13 minutes
     console.log('Waking up server...')
 
     // Perform an HTTPS GET request to hit a backend endpoint
