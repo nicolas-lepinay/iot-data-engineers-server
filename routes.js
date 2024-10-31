@@ -12,12 +12,23 @@ const client = new Client()
 const databases = new Databases(client);
 const databaseId = process.env.APPWRITE_DATABASE_ID;
 const equipmentCollectionId = process.env.APPWRITE_EQUIPMENT_COLLECTION_ID;
+const houseCollectionId = process.env.APPWRITE_HOUSE_COLLECTION_ID;
 
 // Route GET pour obtenir tous les documents de la collection
 router.get('/equipments', async (req, res) => {
     try {
         const equipments = await databases.listDocuments(databaseId, equipmentCollectionId);
         res.status(200).json(equipments);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+// Route GET pour obtenir tous les documents de la collection
+router.get('/houses', async (req, res) => {
+    try {
+        const houses = await databases.listDocuments(databaseId, houseCollectionId);
+        res.status(200).json(houses);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
