@@ -13,6 +13,9 @@ const databases = new Databases(client);
 const databaseId = process.env.APPWRITE_DATABASE_ID;
 const equipmentCollectionId = process.env.APPWRITE_EQUIPMENT_COLLECTION_ID;
 const houseCollectionId = process.env.APPWRITE_HOUSE_COLLECTION_ID;
+const roomCollectionId = process.env.APPWRITE_ROOM_COLLECTION_ID;
+
+// 🍔 ------- GET ALL -------
 
 // Route GET pour obtenir tous les documents de la collection
 router.get('/equipments', async (req, res) => {
@@ -34,6 +37,18 @@ router.get('/houses', async (req, res) => {
     }
 });
 
+// Route GET pour obtenir tous les documents de la collection
+router.get('/rooms', async (req, res) => {
+    try {
+        const rooms = await databases.listDocuments(databaseId, roomCollectionId);
+        res.status(200).json(rooms);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+// 🍔 ------- GET BY ID -------
+
 // Route GET pour obtenir un document spécifique par ID
 router.get('/equipments/:id', async (req, res) => {
     const documentId = req.params.id;
@@ -44,6 +59,47 @@ router.get('/equipments/:id', async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 });
+
+// Route GET pour obtenir tous les équipements d'une maison donnée
+router.get('/equipments/house/:houseId', async (req, res) => {
+    const houseId = req.params.houseId;
+    try {
+        // Récupérer tous les équipements
+        const equipments = await databases.listDocuments(databaseId, equipmentCollectionId);
+        // Filtrer les équipements dont `houses.$id` correspond à `houseId`
+        const filteredEquipments = equipments.documents.filter(equipment => {
+            return equipment.houses && equipment.houses.$id === houseId;
+        });
+        res.status(200).json({
+            total: filteredEquipments.length,
+            documents: filteredEquipments
+        });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+// Route GET pour obtenir toutes les rooms d'une maison donnée
+router.get('/rooms/house/:houseId', async (req, res) => {
+    const houseId = req.params.houseId;
+    try {
+        // Récupérer toutes les rooms
+        const rooms = await databases.listDocuments(databaseId, roomCollectionId);
+        // Filtrer les rooms dont `houses.$id` correspond à `houseId`
+        const filteredRooms = rooms.documents.filter(room => {
+            return room.houses && room.houses.$id === houseId;
+        });
+        res.status(200).json({
+            total: filteredRooms.length,
+            documents: filteredRooms
+        });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+
+// 🍔 ------- POST -------
 
 // Route POST pour créer un nouveau document dans la collection
 router.post('/equipments', async (req, res) => {
@@ -56,6 +112,8 @@ router.post('/equipments', async (req, res) => {
     }
 });
 
+// 🍔 ------- PUT -------
+
 // Route PUT pour mettre à jour un document existant par ID
 router.put('/equipments/:id', async (req, res) => {
     const documentId = req.params.id;
@@ -67,6 +125,8 @@ router.put('/equipments/:id', async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+
+// 🍔 ------- DELETE -------
 
 // Route DELETE pour supprimer un document par ID
 // router.delete('/equipments/:id', async (req, res) => {
