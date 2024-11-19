@@ -14,6 +14,7 @@ const databaseId = process.env.APPWRITE_DATABASE_ID;
 const equipmentCollectionId = process.env.APPWRITE_EQUIPMENT_COLLECTION_ID;
 const houseCollectionId = process.env.APPWRITE_HOUSE_COLLECTION_ID;
 const roomCollectionId = process.env.APPWRITE_ROOM_COLLECTION_ID;
+const eventCollectionId = process.env.APPWRITE_EVENT_COLLECTION_ID;
 
 // 🍔 ------- GET ALL -------
 
@@ -42,6 +43,16 @@ router.get('/rooms', async (req, res) => {
     try {
         const rooms = await databases.listDocuments(databaseId, roomCollectionId);
         res.status(200).json(rooms);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+// Route GET pour obtenir tous les documents de la collection
+router.get('/events', async (req, res) => {
+    try {
+        const events = await databases.listDocuments(databaseId, eventCollectionId);
+        res.status(200).json(events);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
@@ -98,6 +109,36 @@ router.get('/rooms/house/:houseId', async (req, res) => {
     }
 });
 
+// Route GET pour obtenir tous les événements d'une maison donnée
+router.get('/events/house/:houseId', async (req, res) => {
+    const houseId = req.params.houseId;
+    try {
+        // Récupérer tous les équipements pour la maison donnée
+        const equipments = await databases.listDocuments(databaseId, equipmentCollectionId);
+        const filteredEquipments = equipments.documents.filter(equipment => {
+            return equipment.houses && equipment.houses.$id === houseId;
+        });
+
+        if (filteredEquipments.length === 0) {
+            return res.status(404).json({ message: 'Aucun équipement trouvé pour cette maison.' });
+        }
+
+        // Récupérer tous les événements pour les équipements trouvés
+        const events = await databases.listDocuments(databaseId, eventCollectionId);
+        const filteredEvents = events.documents.filter(event => {
+            return filteredEquipments.some(equipment => event.equipments && event.equipments.$id === equipment.$id);
+        });
+
+        res.status(200).json({
+            total: filteredEvents.length,
+            documents: filteredEvents
+        });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
+
 
 // 🍔 ------- POST -------
 
@@ -128,15 +169,15 @@ router.put('/equipments/:id', async (req, res) => {
 
 // 🍔 ------- DELETE -------
 
-// Route DELETE pour supprimer un document par ID
-// router.delete('/equipments/:id', async (req, res) => {
-//     const documentId = req.params.id;
-//     try {
-//         await databases.deleteDocument(databaseId, equipmentCollectionId, documentId);
-//         res.status(200).json({ message: 'Document deleted successfully' });
-//     } catch (error) {
-//         res.status(404).json({ message: error.message });
-//     }
-// });
+//Route DELETE pour supprimer un document par ID
+router.delete('/equipments/:id', async (req, res) => {
+    const documentId = req.params.id;
+    try {
+        await databases.deleteDocument(databaseId, equipmentCollectionId, documentId);
+        res.status(200).json({ message: 'Document deleted successfully' });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
 
 module.exports = router;
