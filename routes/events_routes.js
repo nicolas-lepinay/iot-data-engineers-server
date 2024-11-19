@@ -51,6 +51,19 @@ router.get('/house/:houseId', async (req, res) => {
     }
 });
 
+// Route 🟢 GET pour obtenir tous les événements d'un équipement
+router.get('/equipment/:equipmentId', async (req, res) => {
+    const equipmentId = req.params.equipmentId;
+    try {
+        const events = await databases.listDocuments(databaseId, eventCollectionId, [
+            Query.equal('equipment_id', equipmentId)
+        ]);
+        res.status(200).json(events);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+});
+
 // Route 🔵 POST pour créer un nouveau document dans la collection
 router.post('/', async (req, res) => {
     try {
