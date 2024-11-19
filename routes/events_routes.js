@@ -45,10 +45,7 @@ router.get('/house/:houseId', async (req, res) => {
             Query.equal('equipment_id', equipmentIds)
         ]);
 
-        res.status(200).json({
-            total: events.length,
-            documents: events
-        });
+        res.status(200).json(events);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }

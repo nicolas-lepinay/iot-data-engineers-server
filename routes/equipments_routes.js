@@ -41,10 +41,7 @@ router.get('/house/:houseId', async (req, res) => {
         const equipments = await databases.listDocuments(databaseId, equipmentCollectionId, [
             Query.equal('house_id', houseId)
         ]);
-        res.status(200).json({
-            total: equipments.length,
-            documents: equipments
-        });
+        res.status(200).json(equipments);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
