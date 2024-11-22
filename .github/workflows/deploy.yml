@@ -14,16 +14,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Étape 2 : Configurer SSH
-      - name: Setup SSH for deployment
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.AIX_YNOV_VM_OROS_PRIVATE_KEY }}
+      # Étape 2 : Configurer la clé SSH
+      - name: Setup SSH key
+        run: |
+          echo "${{ secrets.AIX_YNOV_VM_OROS_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
 
       # Étape 3 : Déployer l'API sur la VM
       - name: Deploy to remote server
         run: |
-          ssh -o StrictHostKeyChecking=no oros@98.66.208.87 "
+          ssh -i key.pem -o StrictHostKeyChecking=no oros@98.66.208.87 "
           cd ~/iot-api/iot-data-engineers-server &&
           git pull origin nestjs-psql &&
           npm install &&
