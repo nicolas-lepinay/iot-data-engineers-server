@@ -16,15 +16,25 @@ export class EventsService {
     return this.databaseService.event.findMany();
   }
 
-  async findByHouse(houseId: string): Promise<Event[]> {
-    const equipments = await this.databaseService.equipment.findMany({
-      where: { houseId },
-    });
-    const equipmentIds = equipments.map((e) => e.id);
+    /*
+    async findByHouse(houseId: string): Promise<Event[]> {
+        const equipments = await this.databaseService.equipment.findMany({
+        where: { houseId },
+        });
+        const equipmentIds = equipments.map((e) => e.id);
 
+        return this.databaseService.event.findMany({
+        where: {
+            equipmentId: { in: equipmentIds },
+        },
+        });
+    }
+    */
+
+  async findByHouse(houseId: string): Promise<Event[]> {
     return this.databaseService.event.findMany({
       where: {
-        equipmentId: { in: equipmentIds },
+        houseId,
       },
     });
   }
