@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///c%3A/Users/offth/.vscode/extensions/atlassian.atlascode-3.0.13/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://json.schemastore.org/github-workflow.json": "file:///c%3A/Users/offth/Documents/Etudes/Ynov/M2/IoT/GitHub/Backend/iot-data-engineers-server/.github/workflows/deploy.yml"
+    }
+}

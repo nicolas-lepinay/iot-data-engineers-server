@@ -1,0 +1,33 @@
+name: Deploy NestJS API
+
+on:
+  push:
+    branches:
+      - nestjs-psql # Déclenche l'action lorsque cette branche reçoit un push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Vérifier le code du dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Étape 2 : Configurer SSH
+      - name: Setup SSH for deployment
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.AIX_YNOV_VM_PRIVATE_KEY }}
+
+      # Étape 3 : Déployer l'API sur la VM
+      - name: Deploy to remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no oros@98.66.208.87 "
+          cd ~/iot-api/iot-data-engineers-server &&
+          git pull origin nestjs-psql &&
+          npm install &&
+          npx prisma migrate deploy &&
+          npx prisma generate &&
+          pm2 restart iot-api
+          "
