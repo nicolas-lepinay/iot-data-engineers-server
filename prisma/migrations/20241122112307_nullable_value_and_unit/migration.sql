@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Equipment" ALTER COLUMN "value" DROP NOT NULL,
+ALTER COLUMN "unit" DROP NOT NULL;
