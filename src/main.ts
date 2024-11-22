@@ -10,7 +10,7 @@ async function bootstrap() {
     
     const config = new DocumentBuilder()
         .setTitle('IOT API')
-        .setDescription("API pour l'application IOT - Maisons Connectée")
+        .setDescription("API pour l'application IOT - Maisons Connectées")
         .setVersion('1.0')
         .addBearerAuth()
         .build();
