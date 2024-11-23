@@ -37,7 +37,6 @@ model Equipment {
   state     Boolean
   value     String?
   unit      String?
-  icon      String?
   house     House   @relation(fields: [houseId], references: [id])
   houseId   String
   room      Room?    @relation(fields: [roomId], references: [id])
