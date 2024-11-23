@@ -1,7 +1,14 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
-export class MqttService implements OnModuleInit {
+export class MqttService {
+  constructor(
+    @Inject('MQTT_SERVICE') private readonly client: ClientProxy,
+  ) {}
 
-  onModuleInit() {}
+  async publishMessage(topic: string, message: any) {
+    this.client.emit(topic, message);
+  }
 }
+

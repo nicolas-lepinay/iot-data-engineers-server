@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -18,6 +19,18 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('doc', app, document); // https://<api-domain-name>/doc
 
+    // Configuration du microservice MQTT
+    const mqttMicroservice = app.connectMicroservice<MicroserviceOptions>({
+        transport: Transport.MQTT,
+        options: {
+          url: `mqtts://${process.env.MQTT_HOST}:${process.env.MQTT_PORT}`,
+          username: process.env.MQTT_USERNAME,
+          password: process.env.MQTT_PASSWORD,
+        },
+      });
+      
+
+    await app.startAllMicroservices();
     await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();
