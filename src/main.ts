@@ -8,6 +8,7 @@ async function bootstrap() {
     app.setGlobalPrefix('api');
     app.enableCors();
     
+    // Swagger Doc
     const config = new DocumentBuilder()
         .setTitle('IOT API')
         .setDescription("API pour l'application IOT - Maisons Connectées")
@@ -15,7 +16,7 @@ async function bootstrap() {
         .addBearerAuth()
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('doc', app, document);
+    SwaggerModule.setup('doc', app, document); // https://<api-domain-name>/doc
 
     await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }

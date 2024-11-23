@@ -15,6 +15,7 @@ datasource db {
 
 model House {
   id         String      @id @default(uuid())
+  esp32Id    String?     @unique
   name       String
   rooms      Room[]
   equipments Equipment[]
@@ -30,17 +31,18 @@ model Room {
 }
 
 model Equipment {
-  id      String  @id @default(uuid())
-  name    String
-  state   Boolean
-  value   String?
-  unit    String?
-  icon    String?
-  house   House   @relation(fields: [houseId], references: [id])
-  houseId String
-  room    Room?    @relation(fields: [roomId], references: [id])
-  roomId  String?
-  events  Event[]
+  id        String  @id @default(uuid())
+  esp32Id   String?
+  name      String
+  state     Boolean
+  value     String?
+  unit      String?
+  icon      String?
+  house     House   @relation(fields: [houseId], references: [id])
+  houseId   String
+  room      Room?    @relation(fields: [roomId], references: [id])
+  roomId    String?
+  events    Event[]
 }
 
 model Event {
