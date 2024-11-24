@@ -16,20 +16,11 @@ export class EventsService {
     return this.databaseService.event.findMany();
   }
 
-    /*
-    async findByHouse(houseId: string): Promise<Event[]> {
-        const equipments = await this.databaseService.equipment.findMany({
-        where: { houseId },
-        });
-        const equipmentIds = equipments.map((e) => e.id);
-
-        return this.databaseService.event.findMany({
-        where: {
-            equipmentId: { in: equipmentIds },
-        },
-        });
-    }
-    */
+  async findOne(id: string): Promise<Event> {
+    return this.databaseService.event.findUnique({
+      where: { id },
+    });
+  }
 
   async findByHouse(houseId: string): Promise<Event[]> {
     return this.databaseService.event.findMany({
@@ -37,12 +28,16 @@ export class EventsService {
     });
   }
 
-  async findOne(id: string): Promise<Event> {
-    return this.databaseService.event.findUnique({
-      where: { id },
+  async findByEquipment(equipmentId: string): Promise<Event[]> {
+    return this.databaseService.event.findMany({
+      where: {
+        equipment: {
+          id: equipmentId,
+        },
+      },
     });
   }
-
+  
   async remove(id: string): Promise<Event> {
     return this.databaseService.event.delete({
       where: { id },
