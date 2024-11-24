@@ -15,7 +15,6 @@ datasource db {
 
 model House {
   id         String      @id @default(uuid())
-  esp32Id    String      @unique
   name       String
   rooms      Room[]
   equipments Equipment[]
@@ -31,27 +30,31 @@ model Room {
 }
 
 model Equipment {
-  id        String  @id @default(uuid())
-  esp32Id   String
-  name      String
-  state     Boolean
-  value     String?
-  unit      String?
-  house     House   @relation(fields: [houseId], references: [id])
-  houseId   String
-  room      Room?    @relation(fields: [roomId], references: [id])
-  roomId    String?
-  events    Event[]
+  id      String  @id @default(uuid())
+  esp32Id String
+  name    String
+  state   Boolean
+  value   String?
+  unit    String?
+  house   House   @relation(fields: [houseId], references: [id])
+  houseId String
+  room    Room?   @relation(fields: [roomId], references: [id])
+  roomId  String?
+  events  Event[]
+
+  @@unique([esp32Id, houseId]) // Indice composite unique
 }
 
 model Event {
-  id          String    @id @default(uuid())
-  date        DateTime  @default(now())
-  state       Boolean
-  value       String?
-  unit        String?
-  equipment   Equipment @relation(fields: [equipmentId], references: [id])
-  equipmentId String
-  houseId     String
-  house       House     @relation(fields: [houseId], references: [id])
+  id               String    @id @default(uuid())
+  date             DateTime  @default(now())
+  state            Boolean
+  value            String?
+  unit             String?
+  equipmentEsp32Id String
+  houseId          String
+  // Relation composite avec l'équipement
+  equipment        Equipment @relation(fields: [equipmentEsp32Id, houseId], references: [esp32Id, houseId])
+  // Relation directe avec la maison
+  house            House     @relation(fields: [houseId], references: [id])
 }

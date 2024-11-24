@@ -33,9 +33,7 @@ export class EventsService {
 
   async findByHouse(houseId: string): Promise<Event[]> {
     return this.databaseService.event.findMany({
-      where: {
-        houseId,
-      },
+      where: { houseId },
     });
   }
 

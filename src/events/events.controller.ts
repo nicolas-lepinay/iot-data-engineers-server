@@ -16,9 +16,9 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
-  @Get('/house/:houseId')
-  findByHouse(@Param('houseId') houseId: string) {
-    return this.eventsService.findByHouse(houseId);
+  @Get('/house/:houseEsp32Id')
+  findByHouse(@Param('houseEsp32Id') houseEsp32Id: string) {
+    return this.eventsService.findByHouse(houseEsp32Id);
   }
 
   @Get(':id')

@@ -4,7 +4,7 @@ import * as https from 'https';
 
 @Injectable()
 export class CronService {
-  @Cron('*/13 * * * *')
+  @Cron('*/1 * * * *')
   handleCron() {
     console.log('Waking up server...');
     https.get(`${process.env.SERVER_URL}/api/houses`, (res) => {
