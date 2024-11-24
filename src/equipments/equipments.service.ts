@@ -35,6 +35,15 @@ export class EquipmentsService {
     });
   }
 
+  async updateByHouseAndEquipment(houseId: string, esp32Id: string, data: Prisma.EquipmentUpdateInput): Promise<Equipment | null> {
+    return this.databaseService.equipment.update({
+      where: {
+        esp32Id_houseId: { esp32Id, houseId }, // Relation composite
+      },
+      data,
+    });
+  }
+
   async remove(id: string): Promise<Equipment> {
     return this.databaseService.equipment.delete({
       where: { id },

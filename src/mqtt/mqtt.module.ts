@@ -3,6 +3,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { MqttController } from './mqtt.controller';
 import { MqttService } from './mqtt.service';
 import { EquipmentsModule } from '../equipments/equipments.module'; // Importation du module Equipments
+import { EventsModule } from '../events/events.module'; // Importation du module Equipments
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { EquipmentsModule } from '../equipments/equipments.module'; // Importati
       },
     ]),
     EquipmentsModule,
+    EventsModule,
   ],
   controllers: [MqttController],
   providers: [MqttService],
