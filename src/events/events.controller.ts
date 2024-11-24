@@ -1,12 +1,15 @@
 import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
-import { EventsService } from './events.service';
+import { ApiBody } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
+import { EventsService } from './events.service';
+import { EventDto } from '../swagger/event.swagger.dto';
 
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Post()
+  @ApiBody({type: EventDto})
   create(@Body() createEventDto: Prisma.EventCreateInput) {
     return this.eventsService.create(createEventDto);
   }
@@ -36,3 +39,7 @@ export class EventsController {
     return this.eventsService.remove(id);
   }
 }
+
+
+
+

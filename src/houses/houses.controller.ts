@@ -1,5 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { ApiBody } from '@nestjs/swagger';
 import { HousesService } from './houses.service';
 
 @Controller('houses')
@@ -7,6 +8,7 @@ export class HousesController {
   constructor(private readonly housesService: HousesService) {}
 
   @Post()
+  @ApiBody({type: Object})
   create(@Body() createHouseDto: Prisma.HouseCreateInput) {
     return this.housesService.create(createHouseDto);
   }
@@ -22,6 +24,7 @@ export class HousesController {
   }
 
   @Patch(':id')
+  @ApiBody({type: Object})
   update(@Param('id') id: string, @Body() updateHouseDto: Prisma.HouseUpdateInput) {
     return this.housesService.update(id, updateHouseDto);
   }
