@@ -16,18 +16,10 @@ datasource db {
 model House {
   id         String      @id @default(uuid())
   name       String
-  rooms      Room[]
   equipments Equipment[]
   events     Event[]
 }
 
-model Room {
-  id         String      @id @default(uuid())
-  name       String
-  house      House       @relation(fields: [houseId], references: [id])
-  houseId    String
-  equipments Equipment[]
-}
 
 model Equipment {
   id      String  @id @default(uuid())
@@ -38,8 +30,6 @@ model Equipment {
   unit    String?
   house   House   @relation(fields: [houseId], references: [id])
   houseId String
-  room    Room?   @relation(fields: [roomId], references: [id])
-  roomId  String?
   events  Event[]
 
   @@unique([esp32Id, houseId]) // Indice composite unique
