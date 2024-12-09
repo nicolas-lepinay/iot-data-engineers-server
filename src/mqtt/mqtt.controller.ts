@@ -85,7 +85,7 @@ export class MqttController {
     private validatePayload(payload: EventPayload) {
         const requiredFields = ['equipmentEsp32Id', 'houseId', 'state'];
         for (const field of requiredFields) {
-          if (!payload[field]) {
+          if (payload[field] == undefined || payload[field] == null) {
             throw new Error(`Payload MQTT invalide : le champ '${field}' est manquant.`);
           }
         }
