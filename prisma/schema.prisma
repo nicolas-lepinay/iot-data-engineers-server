@@ -18,8 +18,8 @@ model House {
   name       String
   equipments Equipment[]
   events     Event[]
+  User       User[]
 }
-
 
 model Equipment {
   id      String  @id @default(uuid())
@@ -47,4 +47,12 @@ model Event {
   equipment        Equipment @relation(fields: [equipmentEsp32Id, houseId], references: [esp32Id, houseId])
   // Relation directe avec la maison
   house            House     @relation(fields: [houseId], references: [id])
+}
+
+model User {
+  id       String  @id @default(uuid())
+  username String  @unique
+  password String
+  houseId  String
+  house    House  @relation(fields: [houseId], references: [id])
 }
