@@ -9,15 +9,15 @@ type PublicUser = Omit<User, 'password'>;
 export class UsersService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async validateUser(username: string, password: string): Promise<boolean> {
+  async validateUser(username: string, password: string): Promise<User> | null {
     const user = await this.databaseService.user.findUnique({
       where: { username },
     });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      return true; // L'utilisateur est valide
+      return user; // L'utilisateur est valide
     }
-    return false; // Identifiants invalides
+    return null; // Identifiants invalides
   }
 
   async createUser(createUserDto: Prisma.UserCreateInput): Promise<User> {

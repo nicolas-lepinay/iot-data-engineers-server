@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { ApiBody } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
 import { UsersService } from './users.service';
@@ -14,11 +14,9 @@ export class UsersController {
     @Body('username') username: string,
     @Body('password') password: string,
   ) {
-    const isValid = await this.usersService.validateUser(username, password);
-    if (isValid) {
-      return { message: 'Connexion réussie', code: 200, success: true };
-    }
-    return { message: 'Identifiants invalides', code: 401, success: false };
+    const user = await this.usersService.validateUser(username, password);
+    if (!user) throw new HttpException('Identifiants invalides', HttpStatus.UNAUTHORIZED);
+    return user;
   }
 
   @Post('register')
