@@ -12,7 +12,7 @@ import { UsersModule } from './users/users.module';
         DatabaseModule, 
         HousesModule, 
         EventsModule, 
-        EquipmentsModule, 
+        EquipmentsModule,
         UsersModule,
         MqttModule, 
     ],
