@@ -32,7 +32,7 @@ export class UsersService {
           },
         );
     } catch(error) {
-        if (error.code === 'P2002' && error.meta?.target?.includes('username')) {
+        if (error.meta?.target?.includes('username')) {
             // Gestion spécifique de la violation de contrainte unique sur le champ 'username'
             throw new HttpException({ 
                 message: "Le nom d'utilisateur est déjà pris.", 
