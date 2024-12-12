@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { Prisma, User } from '@prisma/client';
 import { DatabaseService } from '../database/database.service';
 import * as bcrypt from 'bcrypt';
@@ -23,17 +23,37 @@ export class UsersService {
   async createUser(createUserDto: Prisma.UserCreateInput): Promise<User> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
-    return this.databaseService.user.create({
-      data: {
-        ...createUserDto,
-        password: hashedPassword, // Remplace le mot de passe en clair par le mot de passe haché
-      },
-    });
+    try {
+        return this.databaseService.user.create({
+            data: {
+              ...createUserDto,
+              password: hashedPassword, // Remplace le mot de passe en clair par le mot de passe haché
+            },
+          },
+        );
+    } catch(error) {
+        if (error.code === 'P2002' && error.meta?.target?.includes('username')) {
+            // Gestion spécifique de la violation de contrainte unique sur le champ 'username'
+            throw new HttpException({ 
+                message: "Le nom d'utilisateur est déjà pris.", 
+                success: false, 
+            },
+              HttpStatus.CONFLICT,
+            );
+          }
+          // Si une autre erreur survient, relancer l'exception
+          throw error;
+    }
   }
 
-  async findOne(id: string): Promise<PublicUser> {
-    return this.databaseService.user.findUnique({
-      where: { id },
+  async findOne(identifier: string): Promise<PublicUser> {
+    const user = await this.databaseService.user.findFirst({
+        where: {
+            OR: [
+              { id: identifier },
+              { username: identifier },
+            ],
+          },
       select: {
         id: true,
         username: true,
@@ -41,6 +61,10 @@ export class UsersService {
         password: false,
       },
     });
+    if (!user) {
+        throw new HttpException('Utilisateur non trouvé.', HttpStatus.NOT_FOUND);
+      }
+      return user;
   }
 
   async findAll(): Promise<PublicUser[]> {
